@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Screenshot script for Niri
+# Requires: grim, slurp, wl-clipboard, notify-send
+
+SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$SCREENSHOT_DIR"
+
+case "$1" in
+    "area")
+        # Screenshot de área selecionada
+        grim -g "$(slurp)" "$SCREENSHOT_DIR/screenshot_$(date +'%Y%m%d_%H%M%S').png"
+        notify-send "Screenshot" "Área capturada e salva"
+        ;;
+    "window")
+        # Screenshot da janela ativa (aproximação usando área)
+        grim -g "$(slurp)" "$SCREENSHOT_DIR/screenshot_$(date +'%Y%m%d_%H%M%S').png"
+        notify-send "Screenshot" "Janela capturada e salva"
+        ;;
+    "full")
+        # Screenshot da tela toda
+        grim "$SCREENSHOT_DIR/screenshot_$(date +'%Y%m%d_%H%M%S').png"
+        notify-send "Screenshot" "Tela completa capturada e salva"
+        ;;
+    "clipboard")
+        # Screenshot para área de transferência
+        grim -g "$(slurp)" - | wl-copy
+        notify-send "Screenshot" "Área capturada para área de transferência"
+        ;;
+    *)
+        echo "Uso: screenshot [area|window|full|clipboard]"
+        echo "  area     - Captura área selecionada"
+        echo "  window   - Captura janela ativa"
+        echo "  full     - Captura tela completa"
+        echo "  clipboard - Captura área para área de transferência"
+        ;;
+esac

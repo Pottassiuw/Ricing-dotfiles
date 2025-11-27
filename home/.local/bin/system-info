@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Script de informações do sistema
+# Para usar com rofi ou terminal
+
+case "$1" in
+    "rofi")
+        # Mostrar informações formatadas para rofi
+        echo -e "🖥️  $(hostnamectl --static)\n💾  $(free -h | awk '/^Mem:/ {print $3 "/" $2}')\n🔋  $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo "N/A")%\n🌡️  $(sensors | awk '/Core 0/ {print $3}' 2>/dev/null || echo "N/A")\n📊  $(uptime | awk '{print $3}' | sed 's/,//')\n🔊  $(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100"%"}')"
+        ;;
+    *)
+        # Mostrar informações completas no terminal
+        echo "=== Informações do Sistema ==="
+        echo
+        echo "🖥️  Hostname: $(hostnamectl --static)"
+        echo "👤 Usuário: $USER"
+        echo "🐧 Sistema: $(uname -sr)"
+        echo "🎮 Desktop: $XDG_CURRENT_DESKTOP"
+        echo "💾 RAM: $(free -h | awk '/^Mem:/ {print $3 "/" $2}')"
+        echo "💿 Disco: $(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')"
+        echo "🔋 Bateria: $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo "N/A")%"
+        echo "🌡️  CPU Temp: $(sensors | awk '/Core 0/ {print $3}' 2>/dev/null || echo "N/A")"
+        echo "📊 Uptime: $(uptime -p)"
+        echo "🔊 Volume: $(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100"%"}')"
+        echo "🌐 IP Local: $(ip route get 1 | awk '{print $7; exit}' 2>/dev/null || echo "N/A")"
+        ;;
+esac

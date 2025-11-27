@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# Wallpaper Selector Script for Niri with Rofi
+# Requires: rofi, swaybg, find
+
+# Configuração
+WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+CACHE_FILE="$HOME/.cache/wallpaper_list"
+CURRENT_WALLPAPER_FILE="$HOME/.cache/current_wallpaper"
+
+# Criar diretório de wallpapers se não existir
+if [ ! -d "$WALLPAPER_DIR" ]; then
+    mkdir -p "$WALLPAPER_DIR"
+    notify-send "Wallpaper Selector" "Diretório de wallpapers criado em $WALLPAPER_DIR"
+    exit 0
+fi
+
+# Função para gerar lista de wallpapers
+generate_wallpaper_list() {
+    find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.bmp" \) | sort > "$CACHE_FILE"
+}
+
+# Função para aplicar wallpaper
+apply_wallpaper() {
+    local wallpaper_path="$1"
+    
+    if [ ! -f "$wallpaper_path" ]; then
+        notify-send "Erro" "Arquivo de wallpaper não encontrado: $wallpaper_path"
+        return 1
+    fi
+    
+    # Matar processo anterior do swaybg se existir
+    pkill swaybg 2>/dev/null
+    
+    # Aplicar novo wallpaper
+    swaybg -i "$wallpaper_path" -m fill &
+    
+    # Salvar wallpaper atual
+    echo "$wallpaper_path" > "$CURRENT_WALLPAPER_FILE"
+    
+    notify-send "Wallpaper" "Wallpaper alterado: $(basename "$wallpaper_path")"
+}
+
+# Função para restaurar último wallpaper (para usar no início da sessão)
+restore_wallpaper() {
+    if [ -f "$CURRENT_WALLPAPER_FILE" ]; then
+        local last_wallpaper=$(cat "$CURRENT_WALLPAPER_FILE")
+        if [ -f "$last_wallpaper" ]; then
+            apply_wallpaper "$last_wallpaper"
+        fi
+    fi
+}
+
+# Função principal
+main() {
+    case "$1" in
+        "restore")
+            restore_wallpaper
+            exit 0
+            ;;
+        "random")
+            if [ ! -f "$CACHE_FILE" ] || [ "$WALLPAPER_DIR" -nt "$CACHE_FILE" ]; then
+                generate_wallpaper_list
+            fi
+            
+            if [ ! -s "$CACHE_FILE" ]; then
+                notify-send "Erro" "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
+                exit 1
+            fi
+            
+            local random_wallpaper=$(shuf -n 1 "$CACHE_FILE")
+            apply_wallpaper "$random_wallpaper"
+            exit 0
+            ;;
+    esac
+    
+    # Verificar se o cache precisa ser atualizado
+    if [ ! -f "$CACHE_FILE" ] || [ "$WALLPAPER_DIR" -nt "$CACHE_FILE" ]; then
+        generate_wallpaper_list
+    fi
+    
+    # Verificar se existem wallpapers
+    if [ ! -s "$CACHE_FILE" ]; then
+        notify-send "Wallpaper Selector" "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
+        exit 1
+    fi
+    
+    # Preparar lista para o rofi (apenas nomes dos arquivos)
+    local wallpaper_names=""
+    while IFS= read -r wallpaper_path; do
+        local basename_wallpaper=$(basename "$wallpaper_path")
+        wallpaper_names="$wallpaper_names$basename_wallpaper\n"
+    done < "$CACHE_FILE"
+    
+    # Adicionar opção para wallpaper aleatório
+    wallpaper_names="🎲 Aleatório\n$wallpaper_names"
+    
+    # Mostrar menu do rofi
+    local selected=$(echo -e "$wallpaper_names" | rofi -dmenu -i -p "Escolher Wallpaper" -theme-str 'listview { lines: 10; }')
+    
+    # Verificar se algo foi selecionado
+    if [ -z "$selected" ]; then
+        exit 0
+    fi
+    
+    # Tratar seleção
+    if [ "$selected" = "🎲 Aleatório" ]; then
+        local random_wallpaper=$(shuf -n 1 "$CACHE_FILE")
+        apply_wallpaper "$random_wallpaper"
+    else
+        # Encontrar caminho completo do arquivo selecionado
+        local selected_wallpaper=$(grep "/$selected$" "$CACHE_FILE" | head -n 1)
+        if [ -n "$selected_wallpaper" ]; then
+            apply_wallpaper "$selected_wallpaper"
+        else
+            notify-send "Erro" "Wallpaper não encontrado: $selected"
+        fi
+    fi
+}
+
+# Verificar dependências
+for cmd in rofi swaybg find; do
+    if ! command -v $cmd &> /dev/null; then
+        echo "Erro: $cmd não está instalado"
+        notify-send "Erro" "$cmd não está instalado"
+        exit 1
+    fi
+done
+
+# Executar função principal
+main "$@"

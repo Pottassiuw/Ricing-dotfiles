@@ -1,0 +1,144 @@
+
+@import "../../.cache/wal/colors-waybar.css";
+
+* {
+    border: none;
+    border-radius: 0px;
+    font-family: "JetBrains Mono Nerd Font Propo", monospace;
+    font-weight: 500;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(46, 34, 19, 0.85);
+    color: @foreground;
+}
+
+
+#workspaces {
+    background: transparent;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    margin: 0 2px;
+    background-color: transparent;
+    color: @color7;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button:hover {
+    background-color: @color8;
+    color: @foreground;
+}
+
+#workspaces button.active {
+    background-color: @color1;
+    color: @background;
+    border-bottom: 2px solid @color1;
+}
+
+#workspaces button.urgent {
+    background-color: @color9;
+    color: @background;
+}
+
+#clock {
+    background-color: @color4;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#cpu {
+    background-color: @color2;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#memory {
+    background-color: @color3;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#network {
+    background-color: @color5;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#network.disconnected {
+    background-color: @color1;
+}
+
+#pulseaudio {
+    background-color: @color6;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#pulseaudio.muted {
+    background-color: @color8;
+    color: @color7;
+}
+
+#tray {
+    background-color: transparent;
+    padding: 0 10px;
+    margin: 0 2px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @color1;
+}
+
+#disk {
+    background-color: @color7;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#temperature {
+    background-color: @color8;
+    color: @foreground;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#temperature.critical {
+    background-color: @color1;
+    color: @background;
+}
+
+#custom-local-weather {
+    background-color: @color14;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#custom-weather {
+    background-color: @color4;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}
+
+#custom-uptime {
+    background-color: @color9;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+}

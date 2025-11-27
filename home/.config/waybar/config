@@ -1,0 +1,118 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 28,
+    "spacing": 3,
+    "modules-left": ["niri/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["disk", "network", "cpu", "memory", "pulseaudio", "custom/uptime", "tray"],
+    
+    "custom/niri": {
+        "format": " ",
+        "tooltip": false
+    },
+    
+    "niri/workspaces": {
+        "disable-scroll": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1 󰈹",
+            "2": "2 󰭹",
+            "3": "3 󰨞",
+            "4": "4 󰎆",
+            "5": "5 󰉋",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "urgent": "!",
+            "default": "•"
+        }
+    },
+    
+    "clock": {
+        "timezone": "America/Sao_Paulo",
+        "tooltip-format": "<big>{:%Y %B}</big>\\n<tt><small>{calendar}</small></tt>",
+        "format": "󰅐 {:%H:%M}",
+        "format-alt": "󰃭 {:%d/%m/%Y}"
+    },
+    
+    "cpu": {
+        "format": "󰻠 {usage}%",
+        "tooltip": false
+    },
+    
+    "memory": {
+        "format": "󰍛 {}%"
+    },
+    
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    
+    "network": {
+        "format-wifi": "󰖩 {essid} ({signalStrength}%)",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "tooltip-format": "{ifname} via {gwaddr} 󰛳",
+        "format-linked": "󰈀 {ifname} (No IP)",
+        "format-disconnected": "󰖪 Desconectado",
+        "format-alt": "󰛳 {ifname}: {ipaddr}/{cidr}"
+    },
+    
+    "pulseaudio": {
+        "format": "󰕾 {volume}%",
+        "format-bluetooth": "󰂯 {volume}%",
+        "format-bluetooth-muted": "󰂲 Mudo",
+        "format-muted": "󰖁 Mudo",
+        "format-icons": {
+            "headphone": "󰋋",
+            "hands-free": "󰋎",
+            "headset": "󰋎",
+            "phone": "󰏲",
+            "portable": "󰦢",
+            "car": "󰄋",
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol"
+    },
+    
+    "disk": {
+        "interval": 30,
+        "format": "󰋊 {percentage_used}%",
+        "path": "/",
+        "tooltip-format": "Used: {used} / {total}"
+    },
+
+    "temperature": {
+        "thermal-zone": 2,
+        "hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input",
+        "critical-threshold": 80,
+        "format-critical": "󰸁 {temperatureC}°C",
+        "format": "󰔏 {temperatureC}°C"
+    },
+
+    "custom/local-weather": {
+        "format": "{}",
+        "interval": 1800,
+        "exec": "CITY=$(curl -s 'http://ipinfo.io/city' 2>/dev/null | tr -d '\"'); curl -s \"https://wttr.in/$CITY?format=%c+%t\" 2>/dev/null || echo '🌡️ --°C'",
+        "tooltip": false
+    },
+
+    "custom/uptime": {
+        "format": "󰅐 {}",
+        "interval": 60,
+        "exec": "uptime -p | sed 's/up //' | sed 's/ hours/h/' | sed 's/ hour/h/' | sed 's/ minutes/m/' | sed 's/ minute/m/' | cut -d',' -f1,2 | sed 's/,//' | head -c 10"
+    },
+
+    "tray": {
+        "spacing": 10
+    }
+}

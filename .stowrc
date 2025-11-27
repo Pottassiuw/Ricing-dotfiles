@@ -1,0 +1,8 @@
+# GNU Stow configuration
+--target=$HOME
+--ignore=\.git
+--ignore=README.*
+--ignore=LICENSE.*
+--ignore=\.stowrc
+--ignore=install
+--ignore=scripts

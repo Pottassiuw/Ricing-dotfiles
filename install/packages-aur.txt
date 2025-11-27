@@ -1,0 +1,9 @@
+heroic-games-launcher-bin
+librewolf-bin
+opentabletdriver
+paru
+paru-debug
+python-pywal16
+python-pywalfox-librewolf
+qt5-webchannel
+vesktop

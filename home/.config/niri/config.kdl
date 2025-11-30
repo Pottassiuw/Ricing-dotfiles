@@ -103,7 +103,7 @@ binds {
     Mod+B { spawn "librewolf"; }                                          // Primary browser
     Mod+Shift+B { spawn "vivaldi"; }                                      // Secondary browser
     Mod+E { spawn "kitty" "yazi"; }                                       // File manager
-    Mod+T { spawn-sh "rofi -show fb ~/.config/scripts/backend-wallpaper.sh"; } // Wallpaper selector
+    Mod+T { spawn-sh "~/.config/scripts/backend-wallpaper.sh"; } // Wallpaper selector
 
     // Media keys (work when screen is locked)
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
